@@ -9,6 +9,36 @@ https://tensorboard.dev/experiment/HYYXpm51TnGWiqnVPPriqQ/#scalars&runSelectionS
 #### epoch_loss
 <img src="https://raw.githubusercontent.com/PigCakee/omi-lab1/main/epoch_loss%20(1).svg">
 
+* **Описание архитектуры:**
+ 
+* Размерность входного изображения: 
+```
+inputs = tf.keras.Input(shape=(RESIZE_TO, RESIZE_TO, 3))
+```
+
+* Сверточный слой, 8 фильтров, ядро 3x3
+```
+x = tf.keras.layers.Conv2D(filters=8, kernel_size=3)(inputs)
+```
+
+* Операция подвыборки
+```
+x = tf.keras.layers.MaxPool2D()(x)
+```
+
+* Конвертация входящего тензора в тензор меньшей размерности
+ ```
+ x = tf.keras.layers.Flatten()(x)
+ ```
+ 
+ * Dense-слой и функция активации softmax.
+```
+outputs = tf.keras.layers.Dense(NUM_CLASSES, activation=tf.keras.activations.softmax)(x)
+```
+### Анализ результатов:
+
+Наблюдается переобучение нейронной сети, вызванное большим batch-size (validate loss ниже train loss)
+
 ## Создать и обучить сверточную нейронную сеть произвольной архитектуры с количеством сверточных слоев >3.
 
 ### 1. Сверточная нейронная сеть организована из функции Conv2D, функций Гаусса GaussianNoise и GaussianDropout, функции MaxPool2D.
@@ -32,3 +62,4 @@ https://tensorboard.dev/experiment/dRp9nqMfQS2uEYtPi7I8xg/#scalars&runSelectionS
 <img src="https://raw.githubusercontent.com/PigCakee/omi-lab1/main/epoch_loss%20(2).svg">
 
 ## Анализ результатов
+По сравнению с первыми результатами, при добавлении новых слоев можно наблюдать постепенную сходимость графиков train и validation, из чего можно сделать вывод, что 50 эпох было недостаточно для увеличения точности нейронной сети, а новые слои позволяют увеличить точность сети. Если установить число epochs=200, то возможно, несмотря на небольшой датасет, мы получим более точно работающую сеть.
